@@ -27,6 +27,9 @@ public:
 
     // Cargar el siguiente nivel
     void cargarSiguienteNivel();
+
+    // Mostrar los movimientos realizados
+    void mostrarMovimientos() const;
 };
 
 #endif // JUEGO_H

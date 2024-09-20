@@ -76,7 +76,27 @@ void Juego::verificarVictoria() {
         fila = fila->abajo;
     }
     std::cout << "¡Nivel completado!" << std::endl;
+
+    // Preguntar si quiere ver los movimientos
+    char respuesta;
+    std::cout << "¿Quieres ver los movimientos usados para completar el nivel? (S/N): ";
+    std::cin >> respuesta;
+    if (toupper(respuesta) == 'S') {
+        mostrarMovimientos();
+        std::cout << "Presiona cualquier tecla para continuar..." << std::endl;
+        _getch();  // Esperar a que el usuario presione una tecla
+    }
+
     cargarSiguienteNivel();
+}
+
+void Juego::mostrarMovimientos() const {
+    const std::vector<char>& movimientos = jugador->obtenerMovimientos();
+    std::cout << "Movimientos usados para completar el nivel: ";
+    for (char movimiento : movimientos) {
+        std::cout << movimiento << " ";
+    }
+    std::cout << std::endl;
 }
 
 // Cargar el siguiente nivel
@@ -100,4 +120,5 @@ void Juego::cargarSiguienteNivel() {
 
     tablero->imprimir();
     nivelActual++;
+
 }

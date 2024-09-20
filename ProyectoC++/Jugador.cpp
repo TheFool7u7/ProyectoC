@@ -15,6 +15,7 @@ void Jugador::mover(char direccion) {
             posX = filaJugador;
             posY = columnaJugador;
         }
+        movimientos.clear(); // Limpiar los movimientos al reiniciar el nivel
         tablero->imprimir();  // Volver a imprimir el tablero
         std::cout << "Nivel reiniciado" << std::endl;
         return;
@@ -60,6 +61,9 @@ void Jugador::mover(char direccion) {
         // Colocar el jugador en el nuevo nodo
         nodoNuevo->simbolo = '@';
 
+        // Guardar el movimiento
+        movimientos.push_back(direccion);
+
         // Imprimir el tablero actualizado
         tablero->imprimir();
     }
@@ -67,7 +71,6 @@ void Jugador::mover(char direccion) {
         std::cout << "Movimiento no permitido hacia (" << nuevaX << ", " << nuevaY << ")" << std::endl;
     }
 }
-
 // Verificar si el jugador puede moverse a una nueva posición
 bool Jugador::puedeMover(int nuevaX, int nuevaY) {
     if (nuevaX < 0 || nuevaX >= tablero->filas || nuevaY < 0 || nuevaY >= tablero->columnas) {
