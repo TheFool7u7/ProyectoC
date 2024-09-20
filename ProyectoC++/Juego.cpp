@@ -1,4 +1,3 @@
-// Juego.cpp
 #include "Juego.h"
 #include <iostream>
 #include <fstream>
@@ -12,20 +11,7 @@ Juego::Juego() : nivelActual(1) {
 
 // Iniciar el juego
 void Juego::iniciarJuego() {
-    tablero->cargarNivel("nivel1.txt");
-
-    int filaJugador, columnaJugador;
-    if (tablero->encontrarPosicionJugador(filaJugador, columnaJugador)) {
-        jugador = new Jugador(filaJugador, columnaJugador, tablero);
-    }
-    else {
-        // Manejar el caso donde no se encuentra el jugador en el nivel (opcional)
-        std::cout << "Error: No se encontró al jugador ('@') en el nivel." << std::endl;
-        jugador = new Jugador(1, 1, tablero); // Posición por defecto si hay error
-    }
-
-    tablero->imprimir();
-
+    cargarSiguienteNivel();
 
     while (true) {
         // Esperar a que el usuario presione una tecla sin bloquear la ejecución
@@ -90,4 +76,28 @@ void Juego::verificarVictoria() {
         fila = fila->abajo;
     }
     std::cout << "¡Nivel completado!" << std::endl;
+    cargarSiguienteNivel();
+}
+
+// Cargar el siguiente nivel
+void Juego::cargarSiguienteNivel() {
+    if (nivelActual > 5) {
+        std::cout << "¡Felicidades! Has completado todos los niveles." << std::endl;
+        exit(0);
+    }
+
+    std::string archivoNivel = "nivel" + std::to_string(nivelActual) + ".txt";
+    tablero->cargarNivel(archivoNivel);
+
+    int filaJugador, columnaJugador;
+    if (tablero->encontrarPosicionJugador(filaJugador, columnaJugador)) {
+        jugador = new Jugador(filaJugador, columnaJugador, tablero);
+    }
+    else {
+        std::cout << "Error: No se encontró al jugador ('@') en el nivel." << std::endl;
+        jugador = new Jugador(1, 1, tablero); // Posición por defecto si hay error
+    }
+
+    tablero->imprimir();
+    nivelActual++;
 }

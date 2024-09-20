@@ -22,6 +22,7 @@ public:
     bool encontrarPosicionJugador(int& filaJugador, int& columnaJugador);
     void reiniciarNivel(); // Método para reiniciar el nivel
     void guardarPartida(std::string archivo);
+    void limpiarTablero(); // Método para limpiar el tablero
 };
 
 #endif // TABLERO_H

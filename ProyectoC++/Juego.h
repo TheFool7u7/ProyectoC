@@ -1,4 +1,3 @@
-// Juego.h
 #ifndef JUEGO_H
 #define JUEGO_H
 
@@ -25,6 +24,9 @@ public:
 
     // Verificar si el jugador ha ganado el nivel
     void verificarVictoria();
+
+    // Cargar el siguiente nivel
+    void cargarSiguienteNivel();
 };
 
 #endif // JUEGO_H

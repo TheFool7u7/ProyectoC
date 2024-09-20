@@ -5,8 +5,6 @@
 Jugador::Jugador(int x, int y, Tablero* tablero) : posX(x), posY(y), tablero(tablero) {}
 
 // Mover el jugador en la dirección especificada
-
-// Mover el jugador en la dirección especificada
 void Jugador::mover(char direccion) {
     direccion = toupper(direccion);  // Convertir la dirección a mayúsculas
 
@@ -42,9 +40,6 @@ void Jugador::mover(char direccion) {
         Nodo* nodoActual = tablero->obtenerNodo(posX, posY);  // Nodo donde está el jugador actualmente
         Nodo* nodoNuevo = tablero->obtenerNodo(nuevaX, nuevaY);  // Nodo a donde se mueve el jugador
 
-
-
-
         // Restaurar el símbolo original del nodo anterior
         if (nodoActual->esPunto) {
             nodoActual->simbolo = '.';  // Si era un punto, restaurarlo
@@ -67,8 +62,6 @@ void Jugador::mover(char direccion) {
         std::cout << "Movimiento no permitido hacia (" << nuevaX << ", " << nuevaY << ")" << std::endl;
     }
 }
-
-
 
 // Verificar si el jugador puede moverse a una nueva posición
 bool Jugador::puedeMover(int nuevaX, int nuevaY) {

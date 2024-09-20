@@ -1,4 +1,3 @@
-// Tablero.cpp
 #include "Tablero.h"
 #include <iostream>
 #include <fstream>
@@ -40,6 +39,20 @@ void Tablero::construirTablero() {
     }
 }
 
+// Limpiar el tablero
+void Tablero::limpiarTablero() {
+    Nodo* fila = inicio;
+    while (fila) {
+        Nodo* actual = fila;
+        while (actual) {
+            actual->simbolo = ' ';
+            actual->esPunto = false;
+            actual = actual->derecha;
+        }
+        fila = fila->abajo;
+    }
+}
+
 // Imprimir el tablero con limpieza de consola
 void Tablero::imprimir() {
     // Limpiar consola (Windows usa "cls", Linux/macOS usan "clear")
@@ -69,6 +82,7 @@ void Tablero::imprimir() {
 // Cargar un nivel desde un archivo
 void Tablero::cargarNivel(std::string archivo) {
     archivoNivel = archivo;  // Almacenar el archivo de nivel original
+    limpiarTablero();  // Limpiar el tablero antes de cargar el nuevo nivel
     std::ifstream archivoNivel(archivo);
     if (!archivoNivel.is_open()) {
         std::cout << "Error al abrir el archivo del nivel" << std::endl;
@@ -90,7 +104,6 @@ void Tablero::cargarNivel(std::string archivo) {
     }
     archivoNivel.close();
 }
-
 
 // Guardar el nivel en un archivo
 void Tablero::guardarNivel(std::string archivo) {
