@@ -1,4 +1,3 @@
-// Tablero.h
 #ifndef TABLERO_H
 #define TABLERO_H
 
@@ -6,29 +5,23 @@
 #include <string>
 
 class Tablero {
-
 public:
+    int filas, columnas;
+    Nodo* inicio;  // Nodo inicial del tablero
+    std::string archivoNivel;  // Nombre del archivo del nivel
 
-    Nodo* inicio;           // Puntero al primer nodo del tablero
-    int filas, columnas;    // Dimensiones del tablero
-
-    // Constructor del Tablero
+    // Constructor
     Tablero(int filas, int columnas);
 
-    // Imprimir el tablero en la consola
-    void imprimir();
-
-    // Cargar un nivel desde un archivo .txt
-    void cargarNivel(std::string archivo);
-
-    // Guardar el nivel actual en un archivo .txt
-    void guardarNivel(std::string archivo);
-
-    // Obtener un nodo en una posición específica del tablero
-    Nodo* obtenerNodo(int fila, int columna);
-    // Método para construir el tablero utilizando una lista enlazada
+    // Métodos del Tablero
     void construirTablero();
+    void imprimir();
+    void cargarNivel(std::string archivo);
+    void guardarNivel(std::string archivo);
+    Nodo* obtenerNodo(int fila, int columna);
     bool encontrarPosicionJugador(int& filaJugador, int& columnaJugador);
+    void reiniciarNivel(); // Método para reiniciar el nivel
+    void guardarPartida(std::string archivo);
 };
 
 #endif // TABLERO_H

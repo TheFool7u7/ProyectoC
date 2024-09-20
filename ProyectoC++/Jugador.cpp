@@ -5,9 +5,23 @@
 Jugador::Jugador(int x, int y, Tablero* tablero) : posX(x), posY(y), tablero(tablero) {}
 
 // Mover el jugador en la dirección especificada
+
 // Mover el jugador en la dirección especificada
 void Jugador::mover(char direccion) {
     direccion = toupper(direccion);  // Convertir la dirección a mayúsculas
+
+    if (direccion == 'R') {
+        tablero->reiniciarNivel();
+        tablero->imprimir();  // Volver a imprimir el tablero
+        std::cout << "Nivel reiniciado" << std::endl;
+        return;
+    }
+
+    if (direccion == 'G') {
+        tablero->guardarPartida("partida_guardada.txt");
+        std::cout << "Partida guardada. Saliendo..." << std::endl;
+        exit(0);
+    }
 
     int nuevaX = posX;
     int nuevaY = posY;
@@ -28,6 +42,9 @@ void Jugador::mover(char direccion) {
         Nodo* nodoActual = tablero->obtenerNodo(posX, posY);  // Nodo donde está el jugador actualmente
         Nodo* nodoNuevo = tablero->obtenerNodo(nuevaX, nuevaY);  // Nodo a donde se mueve el jugador
 
+
+
+
         // Restaurar el símbolo original del nodo anterior
         if (nodoActual->esPunto) {
             nodoActual->simbolo = '.';  // Si era un punto, restaurarlo
@@ -43,12 +60,14 @@ void Jugador::mover(char direccion) {
         // Colocar el jugador en el nuevo nodo
         nodoNuevo->simbolo = '@';
 
-        std::cout << "Movimiento realizado a (" << nuevaX << ", " << nuevaY << ")" << std::endl;
+        // Imprimir el tablero actualizado
+        tablero->imprimir();
     }
     else {
         std::cout << "Movimiento no permitido hacia (" << nuevaX << ", " << nuevaY << ")" << std::endl;
     }
 }
+
 
 
 // Verificar si el jugador puede moverse a una nueva posición

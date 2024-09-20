@@ -15,13 +15,9 @@ void Menu::seleccionarOpcion(int opcion, Juego& juego) {
     case 1:
         juego.iniciarJuego();
         break;
-    case 2: {
-        std::string archivo;
-        std::cout << "Ingrese el nombre del archivo: ";
-        std::cin >> archivo;
-        juego.cargarJuego(archivo);
+    case 2:
+        juego.cargarJuego("partida_guardada.txt");  // Carga la última partida guardada
         break;
-    }
     case 3:
         std::cout << "Saliendo del juego..." << std::endl;
         exit(0);

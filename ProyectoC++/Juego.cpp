@@ -40,27 +40,40 @@ void Juego::iniciarJuego() {
 
 // Cargar un juego guardado desde un archivo
 void Juego::cargarJuego(const std::string& archivo) {
-    tablero->cargarNivel(archivo);  // Cargar el nivel desde el archivo dado
+    // Cargar el tablero guardado desde el archivo dado
+    tablero->cargarNivel(archivo);
 
+    // Buscar la posición del jugador en el tablero cargado
     int filaJugador, columnaJugador;
     if (tablero->encontrarPosicionJugador(filaJugador, columnaJugador)) {
         jugador = new Jugador(filaJugador, columnaJugador, tablero);
     }
     else {
-        // Manejar el caso donde no se encuentra el jugador (opcional)
+        // Manejar el caso donde no se encuentra el jugador ('@') en el nivel
         std::cout << "Error: No se encontró al jugador ('@') en el nivel." << std::endl;
         jugador = new Jugador(1, 1, tablero); // Posición por defecto si hay error
     }
 
-    tablero->imprimir();            // Imprimir el tablero cargado
+    // Imprimir el tablero cargado
+    tablero->imprimir();
 
     // Continuar el juego después de cargar
     while (true) {
-        if (_kbhit()) {
-            char direccion = _getch();
-            jugador->mover(direccion);
-            tablero->imprimir();
-            verificarVictoria();
+        if (_kbhit()) {  // Verifica si se ha presionado una tecla
+            char direccion = _getch();  // Lee la tecla presionada
+            if (direccion == 'g') {  // Si se presiona 'g', guardar partida y salir
+                tablero->guardarPartida("partida_guardada.txt");
+                std::cout << "Partida guardada. Saliendo..." << std::endl;
+                break;  // Salir del bucle
+            }
+            else if (direccion == 'r') {  // Si se presiona 'r', reiniciar nivel
+                tablero->reiniciarNivel();
+            }
+            else {  // Mover al jugador en la dirección especificada
+                jugador->mover(direccion);
+                tablero->imprimir();
+                verificarVictoria();  // Verifica si se ha ganado la partida
+            }
         }
     }
 }
