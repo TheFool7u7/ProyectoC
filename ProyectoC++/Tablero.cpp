@@ -67,6 +67,9 @@ void Tablero::cargarNivel(std::string archivo) {
         Nodo* actual = fila;
         for (char c : linea) {
             actual->simbolo = c;
+            if (c == '.' || c == '!') {  // Punto de destino o caja colocada en un punto
+                actual->esPunto = true;
+            }
             actual = actual->derecha;
         }
         fila = fila->abajo;

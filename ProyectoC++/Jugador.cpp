@@ -1,13 +1,13 @@
 #include "Jugador.h"
-#include <iostream>  // Para imprimir mensajes de depuración
+#include <iostream>
 
 // Constructor del Jugador
 Jugador::Jugador(int x, int y, Tablero* tablero) : posX(x), posY(y), tablero(tablero) {}
 
 // Mover el jugador en la dirección especificada
+// Mover el jugador en la dirección especificada
 void Jugador::mover(char direccion) {
-    // Convertir la dirección a mayúsculas si es necesario
-    direccion = toupper(direccion);
+    direccion = toupper(direccion);  // Convertir la dirección a mayúsculas
 
     int nuevaX = posX;
     int nuevaY = posY;
@@ -23,20 +23,25 @@ void Jugador::mover(char direccion) {
         return;
     }
 
-    // Imprimir el movimiento que se intenta realizar
-    std::cout << "Intentando mover a (" << nuevaX << ", " << nuevaY << ")" << std::endl;
-
     // Verificar si el movimiento es posible
     if (puedeMover(nuevaX, nuevaY)) {
-        Nodo* nodoActual = tablero->obtenerNodo(posX, posY);
-        Nodo* nodoNuevo = tablero->obtenerNodo(nuevaX, nuevaY);
+        Nodo* nodoActual = tablero->obtenerNodo(posX, posY);  // Nodo donde está el jugador actualmente
+        Nodo* nodoNuevo = tablero->obtenerNodo(nuevaX, nuevaY);  // Nodo a donde se mueve el jugador
 
-        // Intercambiar posiciones
+        // Restaurar el símbolo original del nodo anterior
+        if (nodoActual->esPunto) {
+            nodoActual->simbolo = '.';  // Si era un punto, restaurarlo
+        }
+        else {
+            nodoActual->simbolo = ' ';  // Si no, dejarlo vacío
+        }
+
+        // Actualizar la posición del jugador
         posX = nuevaX;
         posY = nuevaY;
-        nodoNuevo->simbolo = '@';
-        nodoActual->simbolo = ' ';
 
+        // Colocar el jugador en el nuevo nodo
+        nodoNuevo->simbolo = '@';
 
         std::cout << "Movimiento realizado a (" << nuevaX << ", " << nuevaY << ")" << std::endl;
     }
@@ -45,63 +50,58 @@ void Jugador::mover(char direccion) {
     }
 }
 
+
 // Verificar si el jugador puede moverse a una nueva posición
 bool Jugador::puedeMover(int nuevaX, int nuevaY) {
     if (nuevaX < 0 || nuevaX >= tablero->filas || nuevaY < 0 || nuevaY >= tablero->columnas) {
         std::cout << "Movimiento fuera de los límites del tablero" << std::endl;
-        return false; // Movimiento fuera del tablero
+        return false;  // Movimiento fuera del tablero
     }
 
     Nodo* destino = tablero->obtenerNodo(nuevaX, nuevaY);
 
     if (destino->simbolo == '#' || destino->simbolo == '!') {
         std::cout << "Movimiento bloqueado en (" << nuevaX << ", " << nuevaY << ")" << std::endl;
-        return false; // Movimiento bloqueado por una pared o una caja colocada
+        return false;  // Movimiento bloqueado por una pared o una caja colocada
     }
 
     if (destino->simbolo == '$') {
         // Intentar mover una caja
-        int cajaNuevaX = nuevaX + (nuevaX - posX); // Calcular la nueva posición de la caja
+        int cajaNuevaX = nuevaX + (nuevaX - posX);  // Calcular la nueva posición de la caja
         int cajaNuevaY = nuevaY + (nuevaY - posY);
 
         if (puedeMoverCaja(cajaNuevaX, cajaNuevaY)) {
             Nodo* cajaDestino = tablero->obtenerNodo(cajaNuevaX, cajaNuevaY);
 
             if (cajaDestino->simbolo == '.') {
-                cajaDestino->simbolo = '!'; // Caja colocada en punto
+                cajaDestino->simbolo = '!';  // Caja colocada en un punto
             }
             else {
-                cajaDestino->simbolo = '$'; // Caja movida a espacio vacío
+                cajaDestino->simbolo = '$';  // Caja movida a un espacio vacío
             }
 
-            destino->simbolo = '@'; // Jugador se mueve a la posición anterior de la caja
+            destino->simbolo = '@';  // Mover al jugador a la posición de la caja
             return true;
         }
         else {
-            return false; // Movimiento de la caja no permitido
+            return false;  // Movimiento de la caja no permitido
         }
     }
 
-    return true; // Movimiento permitido
+    return true;  // Movimiento permitido
 }
 
 // Verificar si una caja puede ser movida a una nueva posición
 bool Jugador::puedeMoverCaja(int nuevaX, int nuevaY) {
     if (nuevaX < 0 || nuevaX >= tablero->filas || nuevaY < 0 || nuevaY >= tablero->columnas) {
-        return false; // Movimiento de la caja fuera del tablero
+        return false;  // Movimiento de la caja fuera del tablero
     }
 
     Nodo* cajaDestino = tablero->obtenerNodo(nuevaX, nuevaY);
 
     if (cajaDestino->simbolo == '#' || cajaDestino->simbolo == '$' || cajaDestino->simbolo == '!') {
-        return false; // Movimiento de la caja bloqueado
+        return false;  // Movimiento de la caja bloqueado
     }
 
-    return true; // Movimiento de la caja permitido
+    return true;  // Movimiento de la caja permitido
 }
-
-bool Jugador::estaEnPunto() {
-    Nodo* nodoActual = tablero->obtenerNodo(posX, posY);
-    return nodoActual->simbolo == '.';
-}
-
