@@ -10,6 +10,11 @@ void Jugador::mover(char direccion) {
 
     if (direccion == 'R') {
         tablero->reiniciarNivel();
+        int filaJugador, columnaJugador;
+        if (tablero->encontrarPosicionJugador(filaJugador, columnaJugador)) {
+            posX = filaJugador;
+            posY = columnaJugador;
+        }
         tablero->imprimir();  // Volver a imprimir el tablero
         std::cout << "Nivel reiniciado" << std::endl;
         return;

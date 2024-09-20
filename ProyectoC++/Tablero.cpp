@@ -164,8 +164,13 @@ bool Tablero::encontrarPosicionJugador(int& filaJugador, int& columnaJugador) {
 // Reiniciar el nivel cargando nuevamente el archivo original
 void Tablero::reiniciarNivel() {
     cargarNivel(archivoNivel);  // Vuelve a cargar el archivo del nivel original
-}
 
+    int filaJugador, columnaJugador;
+    if (encontrarPosicionJugador(filaJugador, columnaJugador)) {
+        Nodo* nodoJugador = obtenerNodo(filaJugador, columnaJugador);
+        nodoJugador->simbolo = '@'; // Restaurar la posición del jugador
+    }
+}
 void Tablero::guardarPartida(std::string archivo) {
     std::ofstream archivoSalida(archivo);
     if (!archivoSalida.is_open()) {
