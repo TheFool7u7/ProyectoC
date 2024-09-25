@@ -1,6 +1,7 @@
 #include "Jugador.h"
 #include <iostream>
 
+
 // Constructor del Jugador
 Jugador::Jugador(int x, int y, Tablero* tablero) : posX(x), posY(y), tablero(tablero) {}
 

@@ -2,16 +2,44 @@
 #include <iostream>
 #include <fstream>
 #include <conio.h>
+#include <chrono>
+#include <thread>
+#include <atomic> // Para usar std::atomic<bool>
 
 // Constructor del Juego
-Juego::Juego() : nivelActual(1) {
+Juego::Juego() : nivelActual(1), tiempoNivel(60) , nivelFinalizado(false) {
     tablero = new Tablero(10, 10);  // Crear un tablero de 10x10
     jugador = new Jugador(2, 2, tablero);  // Posición inicial del jugador
+}
+void Juego::manejarTemporizador() {
+    auto inicio = std::chrono::steady_clock::now();
+    while (true) {
+        // Salir del bucle si el nivel ha finalizado
+        if (nivelFinalizado.load()) {
+            break;
+        }
+
+        auto ahora = std::chrono::steady_clock::now();
+        auto tiempoTranscurrido = std::chrono::duration_cast<std::chrono::seconds>(ahora - inicio).count();
+        int tiempoRestante = tiempoNivel - tiempoTranscurrido;
+
+        if (tiempoRestante <= 0) {
+            std::cout << "El tiempo finalizo" << std::endl;
+            exit(0);
+        }
+
+        std::cout << "\rTiempo restante: " << tiempoRestante << " segundos" << std::flush;
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 }
 
 // Iniciar el juego
 void Juego::iniciarJuego() {
     cargarSiguienteNivel();
+    std::thread temporizador(&Juego::manejarTemporizador, this);
+
+    temporizador.detach();  // Separar el hilo para que se ejecute en segundo plano
 
     while (true) {
         // Esperar a que el usuario presione una tecla sin bloquear la ejecución
@@ -75,6 +103,7 @@ void Juego::verificarVictoria() {
         }
         fila = fila->abajo;
     }
+    nivelFinalizado.store(true);
     std::cout << "¡Nivel completado!" << std::endl;
 
     // Preguntar si quiere ver los movimientos
@@ -97,10 +126,17 @@ void Juego::mostrarMovimientos() const {
         std::cout << movimiento << " ";
     }
     std::cout << std::endl;
+
+    // Calcular y mostrar el tiempo total utilizando inicioNivel
+    auto fin = std::chrono::steady_clock::now();
+    auto tiempoTotal = std::chrono::duration_cast<std::chrono::seconds>(fin - inicioNivel).count();
+    std::cout << "Tiempo total: " << tiempoTotal << " segundos" << std::endl;
+
 }
 
 // Cargar el siguiente nivel
 void Juego::cargarSiguienteNivel() {
+
     if (nivelActual > 5) {
         std::cout << "¡Felicidades! Has completado todos los niveles." << std::endl;
         exit(0);
@@ -112,11 +148,19 @@ void Juego::cargarSiguienteNivel() {
     int filaJugador, columnaJugador;
     if (tablero->encontrarPosicionJugador(filaJugador, columnaJugador)) {
         jugador = new Jugador(filaJugador, columnaJugador, tablero);
+        
     }
     else {
         std::cout << "Error: No se encontró al jugador ('@') en el nivel." << std::endl;
         jugador = new Jugador(1, 1, tablero); // Posición por defecto si hay error
     }
+
+
+    
+    // Incrementar el tiempo límite para el siguiente nivel
+    tiempoNivel += 15;  // Aumentar en 15 segundos para cada nivel
+
+    inicioNivel = std::chrono::steady_clock::now();  // Registrar el tiempo de inicio del nuevo nivel
 
     tablero->imprimir();
     nivelActual++;

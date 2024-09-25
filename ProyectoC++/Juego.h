@@ -4,6 +4,10 @@
 #include "Tablero.h"
 #include "Jugador.h"
 #include <stack>
+#include <chrono>
+#include <thread>
+#include <atomic> 
+
 
 class Juego {
 private:
@@ -11,6 +15,9 @@ private:
     Jugador* jugador;                   // Puntero al jugador
     std::stack<Nodo*> cajasColocadas;   // Pila de cajas colocadas correctamente
     int nivelActual;                    // Número del nivel actual
+    int tiempoNivel;    
+    std::chrono::steady_clock::time_point inicioNivel; // Tiempo límite para el nivel actual en segundos
+    std::atomic<bool> nivelFinalizado;
 
 public:
     // Constructor del Juego
@@ -30,6 +37,9 @@ public:
 
     // Mostrar los movimientos realizados
     void mostrarMovimientos() const;
+
+    // Manejar el temporizador del nivel
+    void manejarTemporizador();
 };
 
 #endif // JUEGO_H
