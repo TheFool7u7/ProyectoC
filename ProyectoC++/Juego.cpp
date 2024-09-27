@@ -7,7 +7,7 @@
 #include <atomic> // Para usar std::atomic<bool>
 
 // Constructor del Juego
-Juego::Juego() : nivelActual(1), tiempoNivel(60) , nivelFinalizado(false) {
+Juego::Juego() : nivelActual(1), tiempoNivel(1000000) , nivelFinalizado(false) {
     tablero = new Tablero(10, 10);  // Crear un tablero de 10x10
     jugador = new Jugador(2, 2, tablero);  // Posición inicial del jugador
 }
@@ -23,12 +23,6 @@ void Juego::manejarTemporizador() {
         auto tiempoTranscurrido = std::chrono::duration_cast<std::chrono::seconds>(ahora - inicio).count();
         int tiempoRestante = tiempoNivel - tiempoTranscurrido;
 
-        if (tiempoRestante <= 0) {
-            std::cout << "El tiempo finalizo" << std::endl;
-            exit(0);
-        }
-
-        std::cout << "\rTiempo restante: " << tiempoRestante << " segundos" << std::flush;
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
@@ -155,10 +149,6 @@ void Juego::cargarSiguienteNivel() {
         jugador = new Jugador(1, 1, tablero); // Posición por defecto si hay error
     }
 
-
-    
-    // Incrementar el tiempo límite para el siguiente nivel
-    tiempoNivel += 15;  // Aumentar en 15 segundos para cada nivel
 
     inicioNivel = std::chrono::steady_clock::now();  // Registrar el tiempo de inicio del nuevo nivel
 
