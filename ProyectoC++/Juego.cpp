@@ -8,7 +8,7 @@
 
 // Constructor del Juego
 Juego::Juego() : nivelActual(1), tiempoNivel(1000000) , nivelFinalizado(false) {
-    tablero = new Tablero(10, 10);  // Crear un tablero de 10x10
+    tablero = new Tablero(20, 20);  // Crear un tablero de 10x10
     jugador = new Jugador(2, 2, tablero);  // Posición inicial del jugador
 }
 void Juego::manejarTemporizador() {
